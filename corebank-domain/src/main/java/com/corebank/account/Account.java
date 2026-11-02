@@ -7,7 +7,7 @@ import java.util.Currency;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Account {
+public abstract class Account{
 
     private final UUID id;
     private final UUID ownerId;
@@ -24,9 +24,9 @@ public class Account {
         balance = balance.add(amount);
     }
 
-    public void withdraw(Money amount) {
+    public final void withdraw(Money amount) {
         requirePositive(amount);
-        if(amount.isGreaterThan(balance)){
+        if(!canWithdraw(amount)){
             throw new InsufficientFundsException(
                     "Cannot withdraw " + amount + ", balance is " + balance);
         }
@@ -64,4 +64,6 @@ public class Account {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    protected abstract boolean canWithdraw(Money amount);
 }

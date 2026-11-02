@@ -12,7 +12,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class AccountTest {
+class SavingsAccountTest {
 
     private static final Currency EUR = Currency.getInstance("EUR");
     private static final Currency USD = Currency.getInstance("USD");
@@ -21,7 +21,7 @@ class AccountTest {
 
     @BeforeEach
     void setUp() {
-        account = new Account(UUID.randomUUID(), UUID.randomUUID(), EUR);
+        account = new SavingsAccount(UUID.randomUUID(), UUID.randomUUID(), EUR);
     }
 
     private static Money eur(String amount) {
@@ -98,8 +98,8 @@ class AccountTest {
     @Test
     void accountsWithSameIdAreEqual() {
         UUID id = UUID.randomUUID();
-        Account first = new Account(id, UUID.randomUUID(), EUR);
-        Account second = new Account(id, UUID.randomUUID(), EUR);
+        Account first = new SavingsAccount(id, UUID.randomUUID(), EUR);
+        Account second = new SavingsAccount(id, UUID.randomUUID(), EUR);
 
         assertThat(first).isEqualTo(second);
         assertThat(first.hashCode()).isEqualTo(second.hashCode());

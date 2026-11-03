@@ -19,17 +19,13 @@ public abstract class Account{
         this.balance = Money.of("0", currency);
     }
 
-    public void deposit(Money amount) {
+    protected final void credit(Money amount) {
         requirePositive(amount);
         balance = balance.add(amount);
     }
 
-    public final void withdraw(Money amount) {
+    protected final void debit(Money amount) {
         requirePositive(amount);
-        if(!canWithdraw(amount)){
-            throw new InsufficientFundsException(
-                    "Cannot withdraw " + amount + ", balance is " + balance);
-        }
         balance = balance.subtract(amount);
     }
 
@@ -65,5 +61,5 @@ public abstract class Account{
         return Objects.hashCode(id);
     }
 
-    protected abstract boolean canWithdraw(Money amount);
+    //protected abstract boolean canWithdraw(Money amount);
 }

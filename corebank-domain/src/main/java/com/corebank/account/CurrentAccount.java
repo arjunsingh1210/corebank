@@ -6,7 +6,7 @@ import com.corebank.shared.Money;
 import java.util.Currency;
 import java.util.UUID;
 
-public class CurrentAccount extends Account {
+public class CurrentAccount extends TransactionalAccount {
 
     private final Money overdraftLimit;
 

@@ -5,7 +5,7 @@ import com.corebank.shared.Money;
 import java.util.Currency;
 import java.util.UUID;
 
-public class SavingsAccount extends Account {
+public class SavingsAccount extends TransactionalAccount {
 
     public SavingsAccount(UUID id, UUID ownerId, Currency currency) {
         super(id, ownerId, currency);

@@ -17,7 +17,7 @@ class SavingsAccountTest {
     private static final Currency EUR = Currency.getInstance("EUR");
     private static final Currency USD = Currency.getInstance("USD");
 
-    private Account account;
+    private  TransactionalAccount account;
 
     @BeforeEach
     void setUp() {

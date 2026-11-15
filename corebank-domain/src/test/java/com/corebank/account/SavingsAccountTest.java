@@ -1,11 +1,14 @@
 package com.corebank.account;
 
+import com.corebank.interest.FlatRatePolicy;
 import com.corebank.shared.CurrencyMismatchException;
 import com.corebank.shared.InvalidAmountException;
 import com.corebank.shared.Money;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.corebank.interest.FlatRatePolicy;
 
+import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.UUID;
 
@@ -103,5 +106,25 @@ class SavingsAccountTest {
 
         assertThat(first).isEqualTo(second);
         assertThat(first.hashCode()).isEqualTo(second.hashCode());
+    }
+    @Test
+    void appliesInterestFromItsPolicy() {
+        SavingsAccount savings = new SavingsAccount(UUID.randomUUID(), UUID.randomUUID(), EUR,
+                new FlatRatePolicy(new BigDecimal("0.12")));
+        savings.deposit(eur("1200.00"));
+
+        savings.applyMonthlyInterest();
+
+        assertThat(savings.getBalance()).isEqualTo(eur("1212.00"));
+    }
+
+    @Test
+    void accountWithoutPolicyEarnsNothing() {
+        SavingsAccount savings = new SavingsAccount(UUID.randomUUID(), UUID.randomUUID(), EUR);
+        savings.deposit(eur("100.00"));
+
+        savings.applyMonthlyInterest();
+
+        assertThat(savings.getBalance()).isEqualTo(eur("100.00"));
     }
 }

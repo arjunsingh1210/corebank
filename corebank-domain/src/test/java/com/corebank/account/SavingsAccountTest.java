@@ -1,27 +1,30 @@
 package com.corebank.account;
 
+import com.corebank.interest.FlatRatePolicy;
 import com.corebank.shared.CurrencyMismatchException;
 import com.corebank.shared.InvalidAmountException;
 import com.corebank.shared.Money;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.corebank.interest.FlatRatePolicy;
 
+import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class AccountTest {
+class SavingsAccountTest {
 
     private static final Currency EUR = Currency.getInstance("EUR");
     private static final Currency USD = Currency.getInstance("USD");
 
-    private Account account;
+    private  TransactionalAccount account;
 
     @BeforeEach
     void setUp() {
-        account = new Account(UUID.randomUUID(), UUID.randomUUID(), EUR);
+        account = new SavingsAccount(UUID.randomUUID(), UUID.randomUUID(), EUR);
     }
 
     private static Money eur(String amount) {
@@ -98,10 +101,30 @@ class AccountTest {
     @Test
     void accountsWithSameIdAreEqual() {
         UUID id = UUID.randomUUID();
-        Account first = new Account(id, UUID.randomUUID(), EUR);
-        Account second = new Account(id, UUID.randomUUID(), EUR);
+        Account first = new SavingsAccount(id, UUID.randomUUID(), EUR);
+        Account second = new SavingsAccount(id, UUID.randomUUID(), EUR);
 
         assertThat(first).isEqualTo(second);
         assertThat(first.hashCode()).isEqualTo(second.hashCode());
+    }
+    @Test
+    void appliesInterestFromItsPolicy() {
+        SavingsAccount savings = new SavingsAccount(UUID.randomUUID(), UUID.randomUUID(), EUR,
+                new FlatRatePolicy(new BigDecimal("0.12")));
+        savings.deposit(eur("1200.00"));
+
+        savings.applyMonthlyInterest();
+
+        assertThat(savings.getBalance()).isEqualTo(eur("1212.00"));
+    }
+
+    @Test
+    void accountWithoutPolicyEarnsNothing() {
+        SavingsAccount savings = new SavingsAccount(UUID.randomUUID(), UUID.randomUUID(), EUR);
+        savings.deposit(eur("100.00"));
+
+        savings.applyMonthlyInterest();
+
+        assertThat(savings.getBalance()).isEqualTo(eur("100.00"));
     }
 }

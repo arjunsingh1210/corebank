@@ -52,4 +52,7 @@ public record Money(BigDecimal amount, Currency currency) {
         }
 
 
+    public Money multiply(BigDecimal factor) {
+        return new Money(amount.multiply(factor), currency);
+    }
 }

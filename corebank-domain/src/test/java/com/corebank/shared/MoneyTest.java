@@ -3,6 +3,7 @@ package com.corebank.shared;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Currency;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -98,5 +99,11 @@ class MoneyTest {
         assertThat(Money.of("0.01", EUR).isPositive()).isTrue();
         assertThat(Money.of("0.00", EUR).isPositive()).isFalse();
         assertThat(Money.of("-5.00", EUR).isPositive()).isFalse();
+    }
+
+    @Test
+    void multiplyRoundsToCurrencyScale() {
+        assertThat(Money.of("10.00", EUR).multiply(new BigDecimal("0.0333")))
+                .isEqualTo(Money.of("0.33", EUR));
     }
 }
